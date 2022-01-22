@@ -1,0 +1,5 @@
+# files i want to hide
+secrets.py
+.DS_Store
+.pyc
+venv/
