@@ -1,11 +1,11 @@
-from secrets import SECRET_KEY
-from flask import Flask, render_template, request, redirect
+# from secrets import THIS_IS_SECRET
+from flask import Flask, render_template
 from models import db, connect_db, Pet
 from flask_debugtoolbar import DebugToolbarExtension
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SECRET_KEY'] = 'yo mama'
 
 # sqlalchemy settings
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///pets'
@@ -23,7 +23,7 @@ connect_db(app)
 
 
 # routes
-app.route('/')
+@app.route("/")
 def homepage():
     pets = Pet.query.all()
     return render_template('index.html', pets=pets)
