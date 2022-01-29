@@ -1,11 +1,11 @@
-# from secrets import THIS_IS_SECRET
+from secret import SECRET_STRING
 from flask import Flask, render_template
 from models import db, connect_db, Pet
 from flask_debugtoolbar import DebugToolbarExtension
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'yo mama'
+app.config['SECRET_KEY'] = SECRET_STRING
 
 # sqlalchemy settings
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///pets'
