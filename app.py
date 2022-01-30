@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect
 from models import db, connect_db, Pet
 from flask_debugtoolbar import DebugToolbarExtension
 
-from forms import AddPet
+from forms import PetForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_STRING
@@ -32,7 +32,7 @@ def homepage():
 
 @app.route("/add", methods=['GET', 'POST'])
 def add_pet():
-    petform = AddPet()
+    petform = PetForm()
 
     if petform.validate_on_submit():
         new_pet = Pet(name=petform.name.data, 
@@ -45,3 +45,21 @@ def add_pet():
         return redirect('/')
     else:
         return render_template('add.html', form=petform)
+
+
+@app.route("/<int:pet_id>", methods=['GET', 'POST'])
+def edit_pet(pet_id):
+    pet = Pet.query.get_or_404(pet_id)
+    edit_form = PetForm(obj=pet)
+
+    if edit_form.validate_on_submit():
+        pet.name = edit_form.name.data
+        pet.species = edit_form.species.data
+        pet.photo_url = edit_form.photo_url.data
+        pet.age = edit_form.age.data
+        pet.notes = edit_form.notes.data
+        db.session.commit()
+        return redirect('/')
+    else:
+        return render_template('edit.html', form=edit_form)
+
