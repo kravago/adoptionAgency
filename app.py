@@ -1,8 +1,9 @@
 from secret import SECRET_STRING
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from models import db, connect_db, Pet
 from flask_debugtoolbar import DebugToolbarExtension
 
+from forms import AddPet
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_STRING
@@ -27,3 +28,20 @@ connect_db(app)
 def homepage():
     pets = Pet.query.all()
     return render_template('index.html', pets=pets)
+
+
+@app.route("/add", methods=['GET', 'POST'])
+def add_pet():
+    petform = AddPet()
+
+    if petform.validate_on_submit():
+        new_pet = Pet(name=petform.name.data, 
+                      species=petform.name.data,
+                      photo_url=petform.photo_url.data,
+                      age=petform.age.data,
+                      notes=petform.notes.data)
+        db.session.add(new_pet)
+        db.session.commit()
+        return redirect('/')
+    else:
+        return render_template('add.html', form=petform)
